@@ -2,7 +2,7 @@ PREFIX = $(HOME)
 
 install:
 	@install0 () ( cd "$$d" && make install PREFIX=$(PREFIX)); \
-	for d in $D $T; \
+	for d in $T $D; \
 	do install0; \
 	echo dir "'$$d'"; \
 	done
