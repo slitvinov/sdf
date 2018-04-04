@@ -1,19 +1,13 @@
 X: 1; Y: 2; Z: 3;
 sumsq(a):= a[X]^2 + a[Y]^2 + a[Z]^2;
 
-fx(t):=t;
-fy(t):=t*t;
-fz(t):=t*t*t;
-
-f(t):= [fx(t), fy(t), fz(t)];
+f(t):= [0, 0, 0];
 f0: [x0, y0, z0];
 
-define( w(t), exp(-sumsq( f(t)/cutoff - f0/cutoff )));
+define( w(t), exp(-sumsq( f(t) - f0 )/cutoff^2));
 
 define(dwx(t), diff(w(t), x0));
 define(dwy(t), diff(w(t), y0));
 define(dwz(t), diff(w(t), z0));
 
 define(dw(t), sqrt(sumsq([dwx(t), dwy(t), dwz(t)])));
-
-10*[w(t), dw(t)], cutoff = 2, t = 2, x0 = 1, y0 = 2, z0 = 3, float;

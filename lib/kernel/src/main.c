@@ -67,7 +67,7 @@ static double w(SDFKernel *q, double t) {
 
     dx = x - x0; dy = y - y0; dz = z - z0;
     dx /= cutoff; dy /= cutoff; dz /= cutoff;
-    
+
     return I*w0(dx, dy, dz);
 }
 
@@ -92,7 +92,6 @@ static double dw(SDFKernel *q, double t) {
     grad  = al*w*sqrt(dx*dx + dy*dy + dz*dz);
     return grad;
 }
-
 
 double sdf_kernel_w(double t, void *vp) {
     SDFKernel *q;
@@ -129,4 +128,3 @@ double sdf_kernel_dw(double t, void *vp) {
     }
     return dw(q, t);
 }
-

@@ -33,6 +33,7 @@ int sdf_root_apply(SDFRoot *q, SDFRootF fun, void *par, double lo, double hi, /*
     F.function = fun;
     F.params = par;
     epsabs = epsrel = EPS; iter = 0;
+    fprintf(stderr, "lo, hi : %g %g\n", fun(lo, par), fun(hi, par));
     gsl_root_fsolver_set(solver, &F, lo, hi);
     for (;;) {
         iter++;

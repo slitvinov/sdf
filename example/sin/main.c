@@ -9,12 +9,13 @@
 
 #define PI (3.141592653589793)
 
-double ex, ey, ez, cx, cy, cz;
+static double ex, ey, ez, cx, cy, cz;
+static double amp = 0.0;
 
 static double sq(double x) { return x*x; }
 
-static double fx(double t) { return ex * t; };
-static double fy(double t) { return cy + sin(2*PI*t);};
+static double fx(double t) { return ex * t; }
+static double fy(double t) { return cy + amp*sin(2*PI*t);};
 static double fz(double t) { return cz;};
 static double  I(double t) { return 1.0;};
 
@@ -24,38 +25,48 @@ typedef struct Kernel {
     double a, b;
 } Kernel;
 
-static double kern_fun(double cutoff, void *vp) {
+static double kern_fun(double rev_cutoff, void *vp) {
     Kernel *q;
     SDFKernel *kernel;
-    double a, b, grad;
+    double a, b, w, cutoff;
     SDFIntegration *integration;
     q = (Kernel*)vp;
+    cutoff = 1/rev_cutoff;
     integration = q->integration; kernel = q->kernel;
     a = q->a; b = q->b;
     sdf_kernel_cutoff(kernel, cutoff);
     sdf_integration_apply(integration,
                           sdf_kernel_dw, kernel,
                           a, b,
-                          &grad);
-    printf("cutoff grad : %g %g\n", cutoff, grad);
-    return grad - 1.0;
+                          &w);
+    printf("cutoff w : %g %g\n", cutoff, w);
+    return w*w - 1e-5;
 }
-static void kern_conf(Kernel *k, double x, double y, double z, /**/ double *pC) {
-    double lo, hi, cutoff, C;
+static void kern_conf(Kernel *q, double x, double y, double z, /**/ double *palpha, double *pbeta) {
+    double lo, hi, cutoff, alpha, beta, a, b, rev_cutoff;
+    SDFIntegration *integration;
     SDFKernel *kernel;
     SDFRoot *root;
-
-    kernel = k->kernel;
+    integration = q->integration; kernel = q->kernel;
+    a = q->a; b = q->b;
     sdf_root_ini(&root);
-    lo = 0.1; hi = 1000.0;
+    lo = 1/10.0; hi = 1/0.1;
     sdf_kernel_xyz(kernel, x, y, z);
-    sdf_root_apply(root, kern_fun, k, lo, hi, &cutoff);
-    
+    sdf_root_apply(root, kern_fun, q, lo, hi, &rev_cutoff);
+    cutoff = 1/rev_cutoff;
+    sdf_kernel_cutoff(kernel, cutoff);
     printf("cutoff = %g\n", cutoff);
-    
     sdf_root_fin(root);
-
-    *pC = C;
+    sdf_integration_apply(integration,
+                          sdf_kernel_w, kernel,
+                          a, b,
+                          &alpha);
+    sdf_integration_apply(integration,
+                          sdf_kernel_dw, kernel,
+                          a, b,
+                          &beta);
+    printf("alpha, beta : %g %g\n", alpha, beta);
+    *palpha = alpha; *pbeta = beta;
 }
 
 int main() {
@@ -64,17 +75,16 @@ int main() {
     SDFKernel *kernel;
     SDFFile *file;
     int nx, ny, nz, n, i, s;
-    double r, v, g, x, y, z, x0, y0, z0, C;
-    double cutoff, a, b, res;
+    double r, v, g, x, y, z, x0, y0, z0, alpha, beta, cutoff, val;
+    double a, b, res;
     const char *o = "sdf.dat";
 
+    ex = 32.0; ey = 32.0; ez = 32.0;
+    nx = 64;   ny = 64;  nz = 64;
 
-    nx = 60;  ny = 20;  nz = 20;
-    ex = 6.0; ey = 2.0; ez = 2.0;
     cx = ex/2; cy = ey/2; cz = ez/2;
-    a = -2.0; b = 2.0;
-    x0 = y0 = 0; z0 = cz + 1.0;
-    cutoff = 2.0;
+    a = -1; b = 2;
+    x0 = 0;   y0 = 0; z0 = cz + 0.4*ez;
 
     sdf_file_ini(nx, ny, nz, ex, ey, ez, &file);
     sdf_file_n(file, &n);
@@ -82,7 +92,8 @@ int main() {
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
 
     K.kernel = kernel; K.a = a; K.b = b; K.integration = integration;
-    kern_conf(&K, x0, y0, z0, /**/ &C);
+    kern_conf(&K, x0, y0, z0, /**/ &alpha, &beta);
+//    cutoff = 4.0; sdf_kernel_cutoff(kernel, cutoff);
 
     for (i = 0; i < n; i++) {
         s = sdf_file_xyz(file, i, /**/ &x, &y, &z);
@@ -96,6 +107,9 @@ int main() {
                               a, b,
                               &res);
         sdf_file_set(file, i,  res);
+        val = alpha/beta - res/beta;
+        sdf_file_set(file, i,  val);
+        printf("%g %g %g %g\n", x, y, z, val);
     }
     sdf_file_write(file, o);
 
