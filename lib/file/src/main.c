@@ -87,7 +87,7 @@ int sdf_file_set(SDFFile *q, int i, double val) {
         return FILE_SIZE;
     }
     D[i] = val;
-    return FILE_SIZE;
+    return FILE_OK;
 }
 
 int sdf_file_get(SDFFile *q, int i, double *pval) {
@@ -106,5 +106,32 @@ int sdf_file_get(SDFFile *q, int i, double *pval) {
     }
     val = D[i];
     *pval = val;
-    return FILE_SIZE;
+    return FILE_OK;
+}
+
+int sdf_file_write(SDFFile *q, const char *path) {
+    FILE *f;
+    int nx, ny, nz, n;
+    float ex, ey, ez, *D;
+    nx = q->nx; ny = q->ny; nz = q->nz; D = q->D;
+    ex = q->ex; ey = q->ey; ez = q->ez;
+    n = nx*ny*nz;
+
+    f = fopen(path, "w");
+    if (f == NULL) {
+        fprintf(stderr, "fail to open '%s'\n", path);
+        return FILE_WRITE;
+    }
+    fprintf(f, "%g %g %g\n", ex, ey, ez);
+    fprintf(f, "%d %d %d\n", nx, ny, nz);
+    if (fwrite(D, sizeof(D[0]), n, f) != n) {
+        fprintf(stderr, "fail to write to '%s'\n", path);
+        return FILE_WRITE;        
+    };
+    if (fclose(f) != 0) {
+        fprintf(stderr, "fail to close '%s'\n", path);
+        return FILE_WRITE;
+    };
+    
+    return FILE_OK;
 }

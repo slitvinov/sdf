@@ -10,10 +10,11 @@ int main() {
     SDFFile *file;
     int nx, ny, nz, n, i, s;
     double ex, ey, ez, cx, cy, cz, r, v, g, x, y, z, volume;
+    const char *o = "sdf.dat";
 
-    nx = 10; ny = 20; nz = 30;
+    nx = 20; ny = 40; nz = 60;
     ex = 1; ey = 2; ez = 3;
-    cx = ex/2; cy = ey/2; cz = cz/2;
+    cx = ex/2; cy = ey/2; cz = ez/2;
     sdf_file_ini(nx, ny, nz, ex, ey, ez, &file);
 
     sdf_file_n(file, &n);
@@ -31,10 +32,10 @@ int main() {
         }
         r = sq(x - cx) + sq(y - cy) + sq(z - cz);
         r = sqrt(r);
-        v = r - 2.0;
+        v = r - 0.5;
         sdf_file_set(file, i,  v);
-        sdf_file_get(file, i, &g);
-        printf("%g\n", v - g);
     }
+    
+    sdf_file_write(file, o);
     sdf_file_fin(file);
 }
