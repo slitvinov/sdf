@@ -14,11 +14,15 @@ int main() {
     double w;
     SDFIntegration *integration;
     SDFIntegrationF f;
+    int neval;
     sdf_integration_ini(&integration);
     a = 0; b = 10; w = 2;
     f = fsin;
     sdf_integration_apply(integration, &f, &w, a, b, &res);
-    printf("%g\n", res);
+    sdf_integration_neval(integration, &neval);
+    
+    printf("result: %g\n", res);
+    printf("neval : %d\n", neval);
     
     sdf_integration_fin(integration);
 }
