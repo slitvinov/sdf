@@ -11,18 +11,23 @@ static double fz(double t) { return t*t*t;  };
 static double  I(double t) { return 1.0;};
 
 int main() {
-    double x, y, z, cutoff, w, t;
+    double x, y, z, cutoff, t;
+    double a, b, res;
+    SDFIntegration *integration;
+    SDFIntegrationF f;
     SDFKernel *kernel;
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
+    sdf_integration_ini(&integration);
 
     cutoff = 2;
     x = 1; y = 2; z = 3;
     sdf_kernel_cutoff(kernel, cutoff);
     sdf_kernel_xyz(kernel, x, y, z);
 
-    t = 1.0;
-    w = sdf_kernel_w(t, kernel);
-    printf("w: %g\n", w);
+    f = sdf_kernel_w;
+    a = -10; b = 10;
+    sdf_integration_apply(integration, f, kernel, a, b, &res);
+    printf("g: %g\n", res);
     
     sdf_kernel_fin(kernel);
 }

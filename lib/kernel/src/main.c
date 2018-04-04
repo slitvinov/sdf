@@ -44,10 +44,14 @@ int sdf_kernel_cutoff(SDFKernel *q, double cutoff) {
     return KERNEL_OK;
 }
 
+static double exp_minus(double x) {
+    const double big = 10;
+    if (x > big) return 0.0; else return exp(-x);
+}
 static double w0(double x, double y, double z) {
     double r;
     r = x*x + y*y + z*z;
-    return exp(-r);
+    return exp_minus(r);
 }
 static double w(SDFKernel *q, double t) {
     double x, y, z, x0, y0, z0, dx, dy, dz, cutoff, I;
