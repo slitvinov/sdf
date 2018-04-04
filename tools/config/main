@@ -12,7 +12,7 @@ usg () {
     exit
 }
 
-L="memory integration gsl"
+L="memory integration gsl file"
 
 list () {
     for f in $L; do echo "$f"; done
@@ -33,6 +33,9 @@ libs () {
 	   integration)
 	       GSL_LIBS=`gsl-config --libs`
 	       set -- "-lsdf_$f" -lsdf_memory "$GSL_LIBS" "$@"
+	       ;;
+	   file)
+	       set -- "-lsdf_$f" -lsdf_memory "$@"
 	       ;;
 	   *)  err "unknown library '$f'"
 	       ;;

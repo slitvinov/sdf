@@ -1,5 +1,6 @@
 typedef struct SDFFile SDFFile;
 
+enum {FILE_OK, FILE_SIZE};
 int sdf_file_ini(int nx, int ny, int nz, /**/ SDFFile**);
 int sdf_file_fin(SDFFile*);
 
