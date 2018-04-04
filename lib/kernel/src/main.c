@@ -6,12 +6,14 @@
 struct SDFKernel {
     double x, y, z, cutoff;
     int rFlag, cutoffFlag;
+    SDFKernelF fx, fy, fz, I;
 };
 
-int sdf_kernel_ini(/**/ SDFKernel **pq) {
+int sdf_kernel_ini(SDFKernelF fx, SDFKernelF fy, SDFKernelF fz, SDFKernelF I, /**/ SDFKernel **pq) {
     SDFKernel *q;
     EMALLOC(1, &q);
     q->rFlag = q->cutoffFlag = 0;
+    q->fx = fx; q->fy = fy; q->fz = fz; q->I = I;
     *pq = q;
     return KERNEL_OK;
 }
