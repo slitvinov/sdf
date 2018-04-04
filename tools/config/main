@@ -12,7 +12,7 @@ usg () {
     exit
 }
 
-L="memory integration gsl file"
+L="memory integration gsl file kernel"
 
 list () {
     for f in $L; do echo "$f"; done
@@ -37,6 +37,9 @@ libs () {
 	   file)
 	       set -- "-lsdf_$f" -lsdf_memory "$@"
 	       ;;
+	   kernel)
+	       set -- "-lsdf_$f" -lsdf_memory "$@"
+	       ;;	   
 	   *)  err "unknown library '$f'"
 	       ;;
        esac

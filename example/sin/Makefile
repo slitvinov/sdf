@@ -2,7 +2,7 @@ LD = c99
 CC = c99
 
 O = main.o
-SDF_LDFLAGS = `sdf.config --libs file integration`
+SDF_LDFLAGS = `sdf.config --libs integration && sdf.config --libs file`
 SDF_CFLAGS = `sdf.config --cflags file integration`
 MATH_LDFLAGS=-lm
 
