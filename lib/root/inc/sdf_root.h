@@ -1,11 +1,9 @@
-typedef struct SDFIntegration SDFIntegration;
+typedef struct SDFRoot SDFRoot;
 
-typedef double (*SDFIntegrationF) (double X, void *PARAMS);
-enum {INTEGRATION_OK, INTEGRATION_FAIL};
+typedef double (*SDFRootF) (double X, void *PARAMS);
+enum {ROOT_OK, ROOT_FAIL};
 
-int sdf_integration_ini(SDFIntegration**);
-int sdf_integration_fin(SDFIntegration*);
+int sdf_root_ini(SDFRoot**);
+int sdf_root_fin(SDFRoot*);
 
-int sdf_integration_apply(SDFIntegration*, SDFIntegrationF, void *par, double a, double b, double *result);
-int sdf_integration_neval(SDFIntegration*, int*);
-int sdf_integration_abserr(SDFIntegration*, double*);
+int sdf_root_apply(SDFRoot*, SDFRootF, void *par, double lo, double hi, double *result);
