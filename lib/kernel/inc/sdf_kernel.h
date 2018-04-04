@@ -6,3 +6,5 @@ int sdf_kernel_fin(SDFKernel*);
 
 int sdf_kernel_xyz(SDFKernel*, double x, double y, double z);
 int sdf_kernel_cutoff(SDFKernel*, double cutoff);
+
+double sdf_kernel_w(double t, void *kernel);

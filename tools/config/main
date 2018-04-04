@@ -38,7 +38,7 @@ libs () {
 	       set -- "-lsdf_$f" -lsdf_memory "$@"
 	       ;;
 	   kernel)
-	       set -- "-lsdf_$f" -lsdf_memory "$@"
+	       set -- "-lsdf_$f" -lsdf_memory -lm "$@"
 	       ;;	   
 	   *)  err "unknown library '$f'"
 	       ;;

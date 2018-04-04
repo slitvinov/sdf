@@ -9,3 +9,5 @@ g: factor(diff(f, x0)^2 + diff(f, y0)^2 + diff(f, z0)^2);
 
 subst([x0 = 0, y0 = 0, z0 = 0], g);
 subst([x0 = 0, y0 = 0, z0 = 0], f);
+
+

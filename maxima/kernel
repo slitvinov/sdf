@@ -1,0 +1,14 @@
+X: 1; Y: 2; Z: 3;
+sumsq(a):= a[X]^2 + a[Y]^2 + a[Z]^2;
+
+fx(t):=t;
+fy(t):=t*t;
+fz(t):=t*t*t;
+
+f(t):= [fx(t), fy(t), fz(t)];
+f0: [1, 2, 3];
+cutoff: 2;
+
+ker(t):= exp(-sumsq( f(t) - f0 )/cutoff^2);
+
+ker(1), numer;
