@@ -48,9 +48,9 @@ libs () {
 }
 
 cflags () {
-    for f
-    do shift
-       case "$f" in
+    local a="$@"; set --
+    for f in $a    
+    do case "$f" in
 	   gsl)
 	       GSL_CFLAGS=`gsl-config --cflags`
 	       set -- "$GSL_CFLAGS" "$@"
