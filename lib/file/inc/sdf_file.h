@@ -10,6 +10,7 @@ int sdf_file_n       (SDFFile*, /**/ int *n);
 int sdf_file_volume  (SDFFile*, /**/ double *volume);
 
 int sdf_file_xyz(SDFFile*, int i, /**/ double *x, double *y, double *z);
-int sdf_file_set(SDFFile*, int i, double val);
+int sdf_file_set(SDFFile*, int i,      double  val);
+int sdf_file_get(SDFFile*, int i, /**/ double *val);
 
 int sdf_file_write(SDFFile*, const char *path);

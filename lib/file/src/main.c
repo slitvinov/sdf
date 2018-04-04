@@ -72,3 +72,39 @@ int sdf_file_xyz(SDFFile *q, int i, double *px, double *py, double *pz) {
     *px = x; *py = y; *pz = z;
     return FILE_OK;
 }
+
+int sdf_file_set(SDFFile *q, int i, double val) {
+    int nx, ny, nz, n;
+    float *D;
+    nx = q->nx; ny = q->ny; nz = q->nz; D = q->D;
+    n = nx * ny * nz;
+    if (i < 0) {
+        fprintf(stderr, "i=%d < 0\n", i);
+        return FILE_SIZE;
+    }
+    if (i >= n) {
+        fprintf(stderr, "i=%d >= n=%d\n", i, n);
+        return FILE_SIZE;
+    }
+    D[i] = val;
+    return FILE_SIZE;
+}
+
+int sdf_file_get(SDFFile *q, int i, double *pval) {
+    int nx, ny, nz, n;
+    double val;
+    float *D;
+    nx = q->nx; ny = q->ny; nz = q->nz; D = q->D;
+    n = nx * ny * nz;
+    if (i < 0) {
+        fprintf(stderr, "i=%d < 0\n", i);
+        return FILE_SIZE;
+    }
+    if (i >= n) {
+        fprintf(stderr, "i=%d >= n=%d\n", i, n);
+        return FILE_SIZE;
+    }
+    val = D[i];
+    *pval = val;
+    return FILE_SIZE;
+}
