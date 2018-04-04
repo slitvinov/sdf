@@ -71,6 +71,29 @@ static double w(SDFKernel *q, double t) {
     return I*w0(dx, dy, dz);
 }
 
+static double dw(SDFKernel *q, double t) {
+    double x, y, z, x0, y0, z0, dx, dy, dz, cutoff, I, w;
+    double al, grad;
+    cutoff = q->cutoff;
+    I = q->I(t);
+    x0 = q->fx(t);
+    y0 = q->fy(t);
+    z0 = q->fz(t);
+
+    x = q->x;
+    y = q->y;
+    z = q->z;
+
+    dx = x - x0; dy = y - y0; dz = z - z0;
+    dx /= cutoff; dy /= cutoff; dz /= cutoff;
+
+    w = w0(dx, dy, dz);
+    al = 2*I/cutoff;
+    grad  = al*w*sqrt(dx*dx + dy*dy + dz*dz);
+    return grad;
+}
+
+
 double sdf_kernel_w(double t, void *vp) {
     SDFKernel *q;
     q = (SDFKernel*)vp;
@@ -78,16 +101,32 @@ double sdf_kernel_w(double t, void *vp) {
         fprintf(stderr, "q->stamp != MAGIC\n");
         exit(2);
     }
-
     if (!q->cutoffFlag) {
         fprintf(stderr, "cutoff is not set\n");
         exit(2);
     }
-
     if (!q->rFlag) {
         fprintf(stderr, "x, y, z are not set\n");
         exit(2);
     }
-
     return w(q, t);
 }
+
+double sdf_kernel_dw(double t, void *vp) {
+    SDFKernel *q;
+    q = (SDFKernel*)vp;
+    if (q->stamp != MAGIC) {
+        fprintf(stderr, "q->stamp != MAGIC\n");
+        exit(2);
+    }
+    if (!q->cutoffFlag) {
+        fprintf(stderr, "cutoff is not set\n");
+        exit(2);
+    }
+    if (!q->rFlag) {
+        fprintf(stderr, "x, y, z are not set\n");
+        exit(2);
+    }
+    return dw(q, t);
+}
+

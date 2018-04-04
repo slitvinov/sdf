@@ -6,9 +6,14 @@ fy(t):=t*t;
 fz(t):=t*t*t;
 
 f(t):= [fx(t), fy(t), fz(t)];
-f0: [1, 2, 3];
-cutoff: 2;
+f0: [x0, y0, z0];
 
-ker(t):= float(exp(-sumsq( f(t) - f0 )/cutoff^2));
+define( w(t), exp(-sumsq( f(t) - f0 )/cutoff^2));
 
-quad_qag(ker(t), t, -1, 2,     3, 'epsrel=5e-8);
+define(dwx(t), diff(w(t), x0));
+define(dwy(t), diff(w(t), y0));
+define(dwz(t), diff(w(t), z0));
+
+define(dw(t), sqrt(sumsq([dwx(t), dwy(t), dwz(t)])));
+
+10*[w(t), dw(t)], cutoff = 2, t = 2, x0 = 1, y0 = 2, z0 = 3, float;

@@ -8,13 +8,12 @@
 static double fx(double t) { return t;  };
 static double fy(double t) { return t*t;  };
 static double fz(double t) { return t*t*t;  };
-static double  I(double t) { return 1.0;};
+static double  I(double t) { return 10.0;};
 
 int main() {
-    double x, y, z, cutoff, t;
+    double x, y, z, cutoff, t, w, dw;
     double a, b, res;
     SDFIntegration *integration;
-    SDFIntegrationF f;
     SDFKernel *kernel;
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
     sdf_integration_ini(&integration);
@@ -24,10 +23,14 @@ int main() {
     sdf_kernel_cutoff(kernel, cutoff);
     sdf_kernel_xyz(kernel, x, y, z);
 
-    f = sdf_kernel_w;
     a = -1; b = 2;
-    sdf_integration_apply(integration, f, kernel, a, b, &res);
-    printf("g: %g\n", res);
-    
+    sdf_integration_apply(integration, sdf_kernel_w, kernel, a, b, &res);
+//    printf("g: %g\n", res);
+
+    t = 2;
+    w  = sdf_kernel_w (t, kernel);
+    dw = sdf_kernel_dw(t, kernel);
+    printf("g: %g %g\n", w, dw);
+
     sdf_kernel_fin(kernel);
 }
