@@ -12,7 +12,7 @@ usg () {
     exit
 }
 
-L="memory integration gsl file kernel"
+L="memory integration gsl file kernel root"
 
 list () {
     for f in $L; do echo "$f"; done
@@ -34,12 +34,16 @@ libs () {
 	       GSL_LIBS=`gsl-config --libs`
 	       set -- "-lsdf_$f" -lsdf_memory "$GSL_LIBS" "$@"
 	       ;;
+	   root)
+	       GSL_LIBS=`gsl-config --libs`
+	       set -- "-lsdf_$f" -lsdf_memory "$GSL_LIBS" "$@"
+	       ;;
 	   file)
 	       set -- "-lsdf_$f" -lsdf_memory "$@"
 	       ;;
 	   kernel)
 	       set -- "-lsdf_$f" -lsdf_memory -lm "$@"
-	       ;;	   
+	       ;;
 	   *)  err "unknown library '$f'"
 	       ;;
        esac
@@ -49,13 +53,17 @@ libs () {
 
 cflags () {
     local a="$@"; set --
-    for f in $a    
+    for f in $a
     do case "$f" in
 	   gsl)
 	       GSL_CFLAGS=`gsl-config --cflags`
 	       set -- "$GSL_CFLAGS" "$@"
 	       ;;
 	   integration)
+	       GSL_CFLAGS=`gsl-config --cflags`
+	       set -- "$GSL_CFLAGS" "$@"
+	       ;;
+	   root)
 	       GSL_CFLAGS=`gsl-config --cflags`
 	       set -- "$GSL_CFLAGS" "$@"
 	       ;;
