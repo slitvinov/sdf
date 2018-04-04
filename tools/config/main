@@ -12,7 +12,7 @@ usg () {
     exit
 }
 
-L="memory"
+L="memory integration gsl"
 
 list () {
     for f in $L; do echo "$f"; done
@@ -24,8 +24,15 @@ libs () {
     do shift
        case "$f" in
 	   memory)
+	       set -- "$@" "-lsdf_$f"
 	       ;;
-	   error|img_log|img_format|img_desc|memory|img_io|img_pgm)
+	   gsl)
+	       GSL_LIBS=`gsl-config --libs`
+	       set -- "$GSL_LIBS" "$@"
+	       ;;
+	   integration)
+	       GSL_LIBS=`gsl-config --libs`
+	       set -- "-lsdf_$f" -lsdf_memory "$GSL_LIBS" "$@"
 	       ;;
 	   *)  err "unknown library '$f'"
 	       ;;
@@ -35,7 +42,20 @@ libs () {
 }
 
 cflags () {
-    echo "-I$prefix/include"
+    for f
+    do shift
+       case "$f" in
+	   gsl)
+	       GSL_CFLAGS=`gsl-config --cflags`
+	       set -- "$GSL_CFLAGS" "$@"
+	       ;;
+	   integration)
+	       GSL_CFLAGS=`gsl-config --cflags`
+	       set -- "$GSL_CFLAGS" "$@"
+	       ;;
+       esac
+    done
+    echo "-I$prefix/include $@"
 }
 
 if test $# -ne 0 && test "$1" = -h; then usg; fi
