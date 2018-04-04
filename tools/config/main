@@ -1,0 +1,62 @@
+. sdf.config.util
+
+prog=sdf.config
+
+usg () {
+    msg "$prog [OPTION..] [libraries..]"
+    msg 'metainformation about installed libraries'
+    msg 'OPTIONS'
+    msg '  --libs    the pre-processor and compile flags'
+    msg '  --cflags  the link flags'
+    msg '  --list|-l list all installed libraries'
+    exit
+}
+
+L="memory"
+
+list () {
+    for f in $L; do echo "$f"; done
+    exit
+}
+
+libs () {
+    for f
+    do shift
+       case "$f" in
+	   memory)
+	       ;;
+	   error|img_log|img_format|img_desc|memory|img_io|img_pgm)
+	       ;;
+	   *)  err "unknown library '$f'"
+	       ;;
+       esac
+    done
+    echo "-L$prefix/lib $@"
+}
+
+cflags () {
+    echo "-I$prefix/include"
+}
+
+if test $# -ne 0 && test "$1" = -h; then usg; fi
+if test $# -ne 0 && test "$1" = --list; then list; fi
+if test $# -ne 0 && test "$1" = -l;     then list; fi
+
+prefix=`sdf.prefix`
+
+Libs=0 Cflags=0
+for f
+do case "$f" in
+   --libs)   Libs=1; shift ;;
+   --cflags) Cflags=1; shift ;;
+   --*) err "unknown option '$f'" ;;
+   esac
+done
+
+
+if test $Libs -eq 1
+then libs "$@"
+elif test $Cflags -eq 1
+then cflags "$@"
+else err '--libs or --cflags should be given'
+fi

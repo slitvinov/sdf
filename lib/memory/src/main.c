@@ -13,6 +13,6 @@ void emalloc(size_t size, /**/ void **pq) {
 }
 
 void efree(void *q) {
-    free(ptr);
+    free(q);
     q = NULL;
 }

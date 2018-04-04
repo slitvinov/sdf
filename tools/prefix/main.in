@@ -1,0 +1,12 @@
+. sdf.prefix.util
+
+PREFIX='%PREFIX%'
+prog=sdf.prefix
+usg () {
+    msg "$prog"
+    msg 'returns install prefix'
+    exit
+}
+
+if test $# -ne 0 && test $1 = -h; then usg; fi
+echo "$PREFIX"
