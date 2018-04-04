@@ -17,7 +17,7 @@ int main() {
     sdf_integration_ini(&integration);
     a = 0; b = 10; w = 2;
     f = fsin;
-    sdf_integration_apply(integration, &f, &w, a, b, &res);
+    sdf_integration_apply(integration, f, &w, a, b, &res);
     sdf_integration_neval(integration, &neval);
     sdf_integration_abserr(integration, &abserr);    
     
