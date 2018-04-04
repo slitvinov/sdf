@@ -1,0 +1,11 @@
+X: 1; Y: 2; Z: 3;
+r0: [x0, y0, z0];
+r : [x,   y, z];
+
+c: 1;
+sumsq(a):= a[X]^2 + a[Y]^2 + a[Z]^2;
+f: exp(-sumsq(r0 - r)/c^2);
+g: factor(diff(f, x0)^2 + diff(f, y0)^2 + diff(f, z0)^2);
+
+subst([x0 = 0, y0 = 0, z0 = 0], g);
+subst([x0 = 0, y0 = 0, z0 = 0], f);
