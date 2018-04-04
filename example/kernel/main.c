@@ -25,7 +25,7 @@ int main() {
     sdf_kernel_xyz(kernel, x, y, z);
 
     f = sdf_kernel_w;
-    a = -10; b = 10;
+    a = -1; b = 2;
     sdf_integration_apply(integration, f, kernel, a, b, &res);
     printf("g: %g\n", res);
     

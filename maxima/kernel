@@ -9,6 +9,6 @@ f(t):= [fx(t), fy(t), fz(t)];
 f0: [1, 2, 3];
 cutoff: 2;
 
-ker(t):= exp(-sumsq( f(t) - f0 )/cutoff^2);
+ker(t):= float(exp(-sumsq( f(t) - f0 )/cutoff^2));
 
-ker(1), numer;
+quad_qag(ker(t), t, -1, 2,     3, 'epsrel=5e-8);
