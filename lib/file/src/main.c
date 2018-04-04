@@ -47,20 +47,27 @@ int sdf_file_volume(SDFFile *q, double *pvolume) {
 
 int sdf_file_xyz(SDFFile *q, int i, double *px, double *py, double *pz) {
     int nx, ny, nz, n;
-    double x, y, z;
+    int ix, iy, iz;
+    double ex, ey, ez, x, y, z;
     nx = q->nx; ny = q->ny; nz = q->nz;
+    ex = q->ex; ey = q->ey; ez = q->ez;
     n = nx * ny * nz;
     if (i < 0) {
         fprintf(stderr, "i=%d < 0\n", i);
         return FILE_SIZE;
     }
-
     if (i >= n) {
         fprintf(stderr, "i=%d >= n=%d\n", i, n);
         return FILE_SIZE;
     }
 
-    z = 10;
+    iz = i/(nx*ny); i %= (nx*ny);
+    iy = i/(nx)   ; i %= nx;
+    ix = i;
+
+    x = (ix + 0.5)*ex/nx;
+    y = (iy + 0.5)*ey/ny;
+    z = (iz + 0.5)*ez/nz;
 
     *px = x; *py = y; *pz = z;
     return FILE_OK;
