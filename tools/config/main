@@ -20,9 +20,9 @@ list () {
 }
 
 libs () {
-    for f
-    do shift
-       case "$f" in
+    local a="$@"; set --
+    for f in $a
+    do case "$f" in
 	   memory)
 	       set -- "$@" "-lsdf_$f"
 	       ;;
