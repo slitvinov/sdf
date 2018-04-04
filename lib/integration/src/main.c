@@ -3,6 +3,7 @@
 #include "sdf_memory.h"
 #include "sdf_integration.h"
 
+#define EPS (1e-5)
 #define NWORK (1000)
 #define KEY (GSL_INTEG_GAUSS15)
 
@@ -34,7 +35,7 @@ int sdf_integration_apply(SDFIntegration *q, SDFIntegrationF fun, void *par, dou
     work = q->work;
     F.function = fun;
     F.params = par;
-    epsabs = epsrel = 1e-5;
+    epsabs = epsrel = EPS;
     gsl_integration_qag(&F, a, b, epsabs, epsrel, NWORK, KEY, /**/
                         work, &result, &abserr);
 
