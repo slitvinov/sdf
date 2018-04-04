@@ -10,8 +10,7 @@ double fsin(double x, void *pv) {
 }
 
 int main() {
-    double a, b, res;
-    double w;
+    double a, b, res, w, abserr;
     SDFIntegration *integration;
     SDFIntegrationF f;
     int neval;
@@ -20,8 +19,10 @@ int main() {
     f = fsin;
     sdf_integration_apply(integration, &f, &w, a, b, &res);
     sdf_integration_neval(integration, &neval);
+    sdf_integration_abserr(integration, &abserr);    
     
     printf("result: %g\n", res);
+    printf("abserr: %g\n", abserr);
     printf("neval : %d\n", neval);
     
     sdf_integration_fin(integration);

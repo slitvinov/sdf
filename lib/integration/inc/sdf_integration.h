@@ -8,3 +8,4 @@ int sdf_integration_fin(SDFIntegration*);
 
 int sdf_integration_apply(SDFIntegration*, SDFIntegrationF*, void *par, double a, double b, double *result);
 int sdf_integration_neval(SDFIntegration*, int*);
+int sdf_integration_abserr(SDFIntegration*, double*);

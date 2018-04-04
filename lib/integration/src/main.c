@@ -5,6 +5,7 @@
 
 struct SDFIntegration {
     int neval;
+    double abserr;
 };
 
 int sdf_integration_ini(SDFIntegration **pq) {
@@ -29,12 +30,17 @@ int sdf_integration_apply(SDFIntegration *q, SDFIntegrationF *fun, void *par, do
     gsl_integration_qng(&F, a, b, epsabs, epsrel, /**/
                         &result, &abserr, &neval);
 
-    q->neval = neval;
+    q->abserr = abserr; q->neval = neval;
     *presult = result;
     return INTEGRATION_OK;
 }
 
 int sdf_integration_neval(SDFIntegration *q, int *pneval) {
     *pneval = q->neval;
+    return INTEGRATION_OK;
+}
+
+int sdf_integration_abserr(SDFIntegration *q, double *abserr) {
+    *abserr = q->abserr;
     return INTEGRATION_OK;
 }
