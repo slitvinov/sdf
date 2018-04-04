@@ -9,11 +9,10 @@ void emalloc(size_t size, /**/ void **pq) {
         fprintf(stderr, "emalloc failed (size=%ld\n", size);
         exit(2);
     }
-
     *pq = q;
 }
 
-void efree(void *ptr) {
+void efree(void *q) {
     free(ptr);
-    ptr = NULL;
+    q = NULL;
 }
