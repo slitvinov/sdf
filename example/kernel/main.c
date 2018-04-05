@@ -11,7 +11,7 @@ static double fz(double t) { return t*t*t;  };
 static double  I(double t) { return 10.0 * 2;};
 
 int main() {
-    double x, y, z, cutoff, t, w, dw;
+    double x, y, z, cutoff, t, w, dw, dw2;
     double a, b, res;
     SDFIntegration *integration;
     SDFKernel *kernel;
@@ -31,7 +31,8 @@ int main() {
     t = 2;
     w  = sdf_kernel_w (t, kernel);
     dw = sdf_kernel_dw(t, kernel);
-    printf("g: %g %g\n", w, dw);
+    dw2 = sdf_kernel_dw2(t, kernel);
+    printf("%g %g %g\n", w, dw, dw2);
 
     sdf_kernel_fin(kernel);
 }

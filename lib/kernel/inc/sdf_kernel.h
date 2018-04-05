@@ -10,3 +10,4 @@ int sdf_kernel_cutoff(SDFKernel*, double cutoff);
 /* for gsl */
 double sdf_kernel_w (double t, void *kernel);
 double sdf_kernel_dw(double t, void *kernel);
+double sdf_kernel_dw2(double t, void *kernel);

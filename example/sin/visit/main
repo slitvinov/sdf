@@ -1,0 +1,11 @@
+err () { echo >&2 "$@"; exit 2; }
+
+if test $# -le 0
+then err 'missing file'
+fi
+
+t=/tmp/sdf.visit
+vi.ln $t "$1"
+vi.visit visit/main.session
+
+# rm $t

@@ -17,7 +17,7 @@ static double sq(double x) { return x*x; }
 static double fx(double t) { return ex * t; }
 static double fy(double t) { return cy + amp*sin(2*PI*t);};
 static double fz(double t) { return cz;};
-static double  I(double t) { return 1.0;};
+static double  I(double t) { return 1.0 + 0.4*sin(2*PI*t);};
 
 typedef struct Kernel {
     SDFKernel *kernel; /* inout */
@@ -25,38 +25,15 @@ typedef struct Kernel {
     double a, b;
 } Kernel;
 
-static double kern_fun(double rev_cutoff, void *vp) {
-    Kernel *q;
-    SDFKernel *kernel;
-    double a, b, w, cutoff;
-    SDFIntegration *integration;
-    q = (Kernel*)vp;
-    cutoff = 1/rev_cutoff;
-    integration = q->integration; kernel = q->kernel;
-    a = q->a; b = q->b;
-    sdf_kernel_cutoff(kernel, cutoff);
-    sdf_integration_apply(integration,
-                          sdf_kernel_dw, kernel,
-                          a, b,
-                          &w);
-    printf("cutoff w : %g %g\n", cutoff, w);
-    return w*w - 1e-5;
-}
 static void kern_conf(Kernel *q, double x, double y, double z, /**/ double *palpha, double *pbeta) {
-    double lo, hi, cutoff, alpha, beta, a, b, rev_cutoff;
+    double cutoff, alpha, beta, a, b;
     SDFIntegration *integration;
     SDFKernel *kernel;
-    SDFRoot *root;
     integration = q->integration; kernel = q->kernel;
     a = q->a; b = q->b;
-    sdf_root_ini(&root);
-    lo = 1/10.0; hi = 1/0.1;
     sdf_kernel_xyz(kernel, x, y, z);
-    sdf_root_apply(root, kern_fun, q, lo, hi, &rev_cutoff);
-    cutoff = 1/rev_cutoff;
+    cutoff = 10.0;
     sdf_kernel_cutoff(kernel, cutoff);
-    printf("cutoff = %g\n", cutoff);
-    sdf_root_fin(root);
     sdf_integration_apply(integration,
                           sdf_kernel_w, kernel,
                           a, b,
@@ -75,7 +52,7 @@ int main() {
     SDFKernel *kernel;
     SDFFile *file;
     int nx, ny, nz, n, i, s;
-    double r, v, g, x, y, z, x0, y0, z0, alpha, beta, cutoff, val;
+    double r, v, g, x, y, z, x0, y0, z0, alpha, beta, val;
     double a, b, res;
     const char *o = "sdf.dat";
 
@@ -84,7 +61,7 @@ int main() {
 
     cx = ex/2; cy = ey/2; cz = ez/2;
     a = -1; b = 2;
-    x0 = 0;   y0 = 0; z0 = cz + 0.4*ez;
+    x0 = cx;   y0 = cy; z0 = cz + 0.2*ez;
 
     sdf_file_ini(nx, ny, nz, ex, ey, ez, &file);
     sdf_file_n(file, &n);
@@ -93,7 +70,6 @@ int main() {
 
     K.kernel = kernel; K.a = a; K.b = b; K.integration = integration;
     kern_conf(&K, x0, y0, z0, /**/ &alpha, &beta);
-//    cutoff = 4.0; sdf_kernel_cutoff(kernel, cutoff);
 
     for (i = 0; i < n; i++) {
         s = sdf_file_xyz(file, i, /**/ &x, &y, &z);
@@ -106,10 +82,9 @@ int main() {
                               sdf_kernel_w, kernel,
                               a, b,
                               &res);
-        sdf_file_set(file, i,  res);
         val = alpha/beta - res/beta;
         sdf_file_set(file, i,  val);
-        printf("%g %g %g %g\n", x, y, z, val);
+//        printf("%g %g %g %g %g\n", x, y, z, val, res);
     }
     sdf_file_write(file, o);
 
