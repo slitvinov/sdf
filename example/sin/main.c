@@ -10,14 +10,19 @@
 #define PI (3.141592653589793)
 
 static double ex, ey, ez, cx, cy, cz;
-static double amp = 0.0;
+static double amp_l = 0.0;
+static double amp_w = 0.4;
 
 static double sq(double x) { return x*x; }
 
 static double fx(double t) { return ex * t; }
-static double fy(double t) { return cy + amp*sin(2*PI*t);};
+static double fy(double t) {
+    return cy + amp_l*sin(2*PI*t);
+};
 static double fz(double t) { return cz;};
-static double  I(double t) { return 1.0 + 0.4*sin(2*PI*t);};
+static double  I(double t) {
+    return 1.0 + amp_w*sin(2*PI*t);
+};
 
 typedef struct Kernel {
     SDFKernel *kernel; /* inout */

@@ -6,6 +6,8 @@ fi
 
 t=/tmp/sdf.visit
 vi.ln $t "$1"
-vi.visit visit/main.session
+
+#vi.visit -o "$t"
+vi.visit -s visit/main.session
 
 # rm $t
