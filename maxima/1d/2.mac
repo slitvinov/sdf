@@ -1,20 +1,25 @@
-w:  A*exp(-x^2/c2) - C;
-dw: diff(w, x);
-dw2: factor(diff(w, x, 2));
+ratprint: false $
+
+w:  A*(exp(-x^2/c2) + exp( -(x - 1)^2/c2)) - C;
+dw:  diff(w, x);
+dw2: diff(w, x, 2);
+
+x00: 3;
 
 e:  [w  = 0, dw = 1], x = x0;
-s0: linsolve(e, [A, C]);
+s: linsolve(e, [A, C]);
 
-e2: dw2 = 0, s0, x = x0;
-s1: solve(e2, c2)[1];
+e2: subst(s, dw2) $
+e2: subst([x = x0, x0 = x00], e2) $
+e2: factor(e2) $
 
-[w0, dw0, dw20]: factor([w, dw, dw2]),    s0;
-[w0, dw0, dw20]: factor([w0, dw0, dw20]), s1;
+c20: find_root(e2, 'c2, 1/10, 100);
+
+[w0, dw0, dw20]: factor([w, dw,  dw2]),    s $
+[w0, dw0, dw20]: [w0, dw0, dw20],    c2 = c20, float $
 
 draw2d(
-  'color = 'red,   explicit(w0, x, -3, 3),
-  'color = 'green, explicit(dw0, x, -3, 3),
-  'color = 'blue, explicit(dw20, x, -3, 3)
-  ), x0 = 1;
-
-
+  'color = 'red,   explicit( w0,  x, -4, 4),
+  'color = 'green, explicit(dw0,  x, -4, 4),
+  'color = 'blue,  explicit(dw20, x, -4, 4)
+  ), x0 = x00, float;

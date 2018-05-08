@@ -1,0 +1,19 @@
+load("pdiff") $
+
+w(x, y):= A*u(x, y) - C;
+
+nx: diff(w(x, y), x) / 'nn;
+ny: diff(w(x, y), y) / 'nn;
+
+dx: nx * ds;
+dy: ny * ds;
+
+tellsimpafter(pderivop(u,0,1)(x,y), ux);
+tellsimpafter(pderivop(u,1,0)(x,y), uy);
+
+tellsimpafter(pderivop(u,1,1)(x,y), uxy);
+tellsimpafter(pderivop(u,2,0)(x,y), uxx);
+tellsimpafter(pderivop(u,0,2)(x,y), uyy);
+
+taylor(w(x + dx, y + dy) - w(x, y) - ds, ds, 0, 1), nn = sqrt(ux^2 + uy^2);
+taylor(w(x + dx, y + dy) - w(x, y) - ds, ds, 0, 2), nn = sqrt(ux^2 + uy^2);
