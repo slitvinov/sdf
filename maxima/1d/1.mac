@@ -1,5 +1,3 @@
-load("to_poly_solve");
-
 w:  A*exp(-x^2/c2) - C;
 dw: diff(w, x);
 dw2: factor(diff(w, x, 2));
