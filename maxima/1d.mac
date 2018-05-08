@@ -1,9 +1,22 @@
-w:  A*exp(-x^2/c^2) - C;
+load("to_poly_solve");
+
+w:  A*exp(-x^2/c2) - C;
 dw: diff(w, x);
 dw2: factor(diff(w, x, 2));
 
 e:  [w  = 0, dw = 1], x = x0;
+s0: linsolve(e, [A, C]);
 
-solve(dw2, c), x = x0;
+e2: dw2 = 0, s0, x = x0;
+s1: solve(e2, c2)[1];
 
-solve(e, [A, C, c]);
+[w0, dw0, dw20]: factor([w, dw, dw2]),    s0;
+[w0, dw0, dw20]: factor([w0, dw0, dw20]), s1;
+
+draw2d(
+  'color = 'red,   explicit(w0, x, -3, 3),
+  'color = 'green, explicit(dw0, x, -3, 3),
+  'color = 'blue, explicit(dw20, x, -3, 3)
+  ), x0 = 1;
+
+
