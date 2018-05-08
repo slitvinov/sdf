@@ -1,0 +1,9 @@
+w:  A*exp(-x^2/c^2) - C;
+dw: diff(w, x);
+dw2: factor(diff(w, x, 2));
+
+e:  [w  = 0, dw = 1], x = x0;
+
+solve(dw2, c), x = x0;
+
+solve(e, [A, C, c]);
