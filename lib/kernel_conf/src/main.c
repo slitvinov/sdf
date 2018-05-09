@@ -68,27 +68,21 @@ static double fun(double cutoff, void *param) {
     den = 2*sqrt(pow(uz,2)+pow(uy,2)+pow(ux,2))
         *(pow(uy,2)*pow(uz,2)+pow(uz,2)+pow(uy,4)+pow(ux,2)*pow(uy,2)+pow(ux,2));
     x = num/den;
-
     return x;
 }
 
-int sdf_kernel_conf_cutoff(SDFKernelConf *q, /**/ double *pcutoff) {
+int sdf_kernel_conf_cutoff(SDFKernelConf *q, double lo, double hi, /**/ double *pcutoff) {
     int r;
-    double lo, hi, cutoff;
+    double cutoff;
     SDFRoot *root;
-    SDFRootF f;
     sdf_root_ini(&root);
-
-    f = fun; lo = 5; hi = 20;
-    r = sdf_root_apply(root, f, q, lo, hi, /**/ &cutoff);
+    r = sdf_root_apply(root, fun, q, lo, hi, /**/ &cutoff);
 
     if (r != ROOT_OK) {
         fprintf(stderr, "fail to find root\n");
         exit(2);
     }
-
     sdf_root_fin(root);
-
     *pcutoff = cutoff;
     return KERNEL_CONF_OK;
 }

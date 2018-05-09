@@ -81,7 +81,8 @@ int main() {
     SDFKernel *kernel;
     SDFKernelConf *kernel_conf;
     double a, b, A, B;
-    double x0, y0, z0, cutoff;
+    double x0, y0, z0;
+    double lo, hi, cutoff;
 
     ex = 32.0; ey = 32.0; ez = 32.0;
     cx = ex/2; cy = ey/2; cz = ez/2;
@@ -91,8 +92,9 @@ int main() {
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
     sdf_kernel_xyz(kernel, x0, y0, z0);
     sdf_kernel_conf_ini(kernel, a, b, /**/ &kernel_conf);
-    
-    sdf_kernel_conf_cutoff(kernel_conf, /**/ &cutoff);
+
+    lo = 5; hi = 40.0;
+    sdf_kernel_conf_cutoff(kernel_conf, lo, hi, /**/ &cutoff);
     sdf_kernel_conf_fin(kernel_conf);
     sdf_kernel_fin(kernel);
     
