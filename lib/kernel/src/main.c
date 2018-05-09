@@ -264,7 +264,7 @@ double sdf_kernel_dzz(double t, void *vp) {
 static double drdxy(SDFKernel *q, double t) {
     double u, u0, du, v, v0, dv;
     u0 = q->fx(t); u = q->x; du = u - u0;
-    v0 = q->fy(t); v = q->x; dv = v - v0;
+    v0 = q->fy(t); v = q->y; dv = v - v0;
     return 4*du*dv;
 }
 

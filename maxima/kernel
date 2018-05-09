@@ -1,6 +1,8 @@
 X: 1; Y: 2; Z: 3;
 sumsq(a):= a[X]^2 + a[Y]^2 + a[Z]^2;
 
+v: [cutoff = 2, t = 2, x0 = 1, y0 = 2, z0 = 3];
+
 fx(t):=t;
 fy(t):=t*t;
 fz(t):=t*t*t;
@@ -14,6 +16,15 @@ define(dwx(t), diff(w(t), x0));
 define(dwy(t), diff(w(t), y0));
 define(dwz(t), diff(w(t), z0));
 
-define(dw(t), sqrt(sumsq([dwx(t), dwy(t), dwz(t)])));
+define(dwxx(t), diff(w(t), x0, 2));
+define(dwyy(t), diff(w(t), y0, 2));
+define(dwzz(t), diff(w(t), z0, 2));w
 
-10*[w(t), dw(t)], cutoff = 2, t = 2, x0 = 1, y0 = 2, z0 = 3, float;
+define(dwxy(t), diff(diff(w(t), x0), y0));
+define(dwxz(t), diff(diff(w(t), x0), z0));
+define(dwyz(t), diff(diff(w(t), y0), z0));
+
+1000*[dwx(t), dwy(t), dwz(t)], v, float;
+1000*[dwxx(t), dwyy(t), dwzz(t)], v, float;
+
+1000*[dwxy(t), dwxz(t), dwyz(t)], v, float;

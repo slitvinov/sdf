@@ -8,31 +8,36 @@
 static double fx(double t) { return t;  };
 static double fy(double t) { return t*t;  };
 static double fz(double t) { return t*t*t;  };
-static double  I(double t) { return 10.0 * 2;};
+static double  I(double t) { return 1000.0;};
 
 int main() {
-    double x, y, z, cutoff, t, w, dw, dw2;
-    double a, b, res;
+    double x, y, z, cutoff, t, dx, dy, dz;
+    double dxx, dyy, dzz, dxy, dxz, dyz;
+    double a, b;
     SDFIntegration *integration;
     SDFKernel *kernel;
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
-    sdf_integration_ini(&integration);
 
     cutoff = 2;
     x = 1; y = 2; z = 3;
     sdf_kernel_cutoff(kernel, cutoff);
     sdf_kernel_xyz(kernel, x, y, z);
 
-    a = -1; b = 2;
-//    sdf_integration_apply(integration, sdf_kernel_w,  kernel, a, b, &res);
-    sdf_integration_apply(integration, sdf_kernel_dw, kernel, a, b, &res);
-    printf("g: %g\n", res);
-
     t = 2;
-    w  = sdf_kernel_w (t, kernel);
-    dw = sdf_kernel_dw(t, kernel);
-    dw2 = sdf_kernel_dw2(t, kernel);
-    printf("%g %g %g\n", w, dw, dw2);
+    dx = sdf_kernel_dx(t, kernel);
+    dy = sdf_kernel_dy(t, kernel);
+    dz = sdf_kernel_dz(t, kernel);
+    printf("%g %g %g\n", dx, dy, dz);
+
+    dxx = sdf_kernel_dxx(t, kernel);
+    dyy = sdf_kernel_dyy(t, kernel);
+    dzz = sdf_kernel_dzz(t, kernel);
+    printf("%g %g %g\n", dxx, dyy, dzz);
+
+    dxy = sdf_kernel_dxy(t, kernel);
+    dxz = sdf_kernel_dxz(t, kernel);
+    dyz = sdf_kernel_dyz(t, kernel);
+    printf("%g %g %g\n", dxy, dxz, dyz);
 
     sdf_kernel_fin(kernel);
 }
