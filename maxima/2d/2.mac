@@ -1,0 +1,35 @@
+ratprint: false $
+
+po: ['x = 1, 'y = 1] $
+
+k:  exp(-('x^2 + 'y^2)/'c2) $
+kx:  diff(k, 'x) $
+ky:  diff(k, 'y) $
+
+kxx: diff(k, 'x, 2) $
+kyy: diff(k, 'y, 2) $
+kxy: diff(diff(k, x), y) $
+
+u:  k $
+ux: kx $
+uy: ky $
+uxx: kxx $
+uyy: kyy $
+uxy: kxy $
+
+A: 1/sqrt(ux^2 + uy^2), po;
+dw2: (uy^2*uyy+2*ux*uxy*uy+ux^2*uxx)/(2*sqrt(uy^2+ux^2)*(uy^4+ux^2*uy^2+ux^2)), po;
+
+c20: find_root(dw2, 'c2, 1/10, 100);
+
+w: A * u - 'C;
+s: linsolve(w, 'C), x = 1, y = 1, 'c2 = c20;
+
+w0: w, c2 = c20, s;
+w0: factor(w0);
+
+draw2d(
+  implicit(w0,       x, -4, 4, y, -4, 4),
+  implicit(w0 - 1/2, x, -4, 4, y, -4, 4),
+  implicit(w0 + 1/2, x, -4, 4, y, -4, 4));
+
