@@ -111,8 +111,8 @@ int main(int argc, const char *argv[]) {
     x0 = cx;   y0 = cy; z0 = cz + 0.2*ez;
 
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
-    sdf_kernel_conf_ini(kernel, a, b, x0, y0, z0, /**/
-                        &kernel_conf);
+    sdf_kernel_xyz(kernel, x0, y0, z0);
+    sdf_kernel_conf_ini(kernel, a, b, /**/ &kernel_conf);
 
     kern_conf_a(kernel, cutoff, a, b, x0, y0, z0, /**/ &A);
     kern_conf_b(kernel, cutoff, a, b, x0, y0, z0, /**/ &B);
