@@ -44,12 +44,31 @@ static double dbl(int *pc, const char **pv[]) {
 enum {KERN_CONF_OK, KERN_CONF_FAIL};
 static int kern_conf_a(SDFKernel *kernel, double cutoff,
                 double a, double b,
-                double x0, double y0, double z0, /**/ double *pA) {
+                double x0, double y0, double z0, /**/ double *px) {
+    SDFIntegration *integration;
+    double ux, uy, uz, x;
+
+    sdf_integration_ini(&integration);
+    sdf_kernel_cutoff(kernel, cutoff);
+
+    sdf_kernel_xyz(kernel, x0, y0, z0);
+    sdf_integration_apply(integration, sdf_kernel_dx, kernel, a, b, &ux);
+    sdf_integration_apply(integration, sdf_kernel_dy, kernel, a, b, &uy);
+    sdf_integration_apply(integration, sdf_kernel_dz, kernel, a, b, &uz);
+    sdf_integration_fin(integration);
+    x = 1/sqrt(ux*ux + uy*uy + uz*uz);
+    *px = x;
+    return KERN_CONF_OK;
+}
+
+static int kern_conf_b(SDFKernel *kernel, double cutoff,
+                double a, double b,
+                double x0, double y0, double z0, /**/ double *px) {
     SDFIntegration *integration;
     double ux, uy, uz;
     double uxx, uyy, uzz;
     double uxy, uxz, uyz;
-    double num, den, A;
+    double num, den, x;
 
     sdf_integration_ini(&integration);
     sdf_kernel_cutoff(kernel, cutoff);
@@ -70,17 +89,16 @@ static int kern_conf_a(SDFKernel *kernel, double cutoff,
     num = pow(uz,2)*uzz+2*uy*uyz*uz+2*ux*uxz*uz+pow(uy,2)*uyy+2*ux*uxy*uy+pow(ux,2)*uxx;
     den = 2*sqrt(pow(uz,2)+pow(uy,2)+pow(ux,2))
         *(pow(uy,2)*pow(uz,2)+pow(uz,2)+pow(uy,4)+pow(ux,2)*pow(uy,2)+pow(ux,2));
-    A = num/den;
-
+    x = num/den;
     sdf_integration_fin(integration);
 
-    *pA = A;
+    *px = x;
     return KERN_CONF_OK;
 }
 
 int main(int argc, const char *argv[]) {
     SDFKernel *kernel;
-    double a, b, A;
+    double a, b, A, B;
     double x0, y0, z0, cutoff;
 
     cutoff = dbl(&argc, &argv);
@@ -93,5 +111,7 @@ int main(int argc, const char *argv[]) {
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
 
     kern_conf_a(kernel, cutoff, a, b, x0, y0, z0, /**/ &A);
-    printf("%g %g\n", cutoff, A);
+    kern_conf_b(kernel, cutoff, a, b, x0, y0, z0, /**/ &B);
+    
+    printf("%g %g\n", cutoff, B);
 }
