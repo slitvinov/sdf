@@ -87,11 +87,19 @@ int sdf_kernel_conf_cutoff(SDFKernelConf *q, double lo, double hi, /**/ double *
 }
 
 int sdf_kernel_conf_a(SDFKernelConf *q, /**/ double *px) {
-    double x;
+    double x, a, b, ux, uy, uz;
+    SDFIntegration *integration;
+    SDFKernel *kernel;
+
+    integration = q->integration;
+    kernel = q->kernel;
+    a = q->a; b = q->b;
 
     sdf_integration_apply(integration, sdf_kernel_dx, kernel, a, b, &ux);
     sdf_integration_apply(integration, sdf_kernel_dy, kernel, a, b, &uy);
     sdf_integration_apply(integration, sdf_kernel_dz, kernel, a, b, &uz);
+
+    x = 1/sqrt(ux*ux + uy*uy + uz*uz);
 
     *px = x;
     return KERNEL_CONF_OK;

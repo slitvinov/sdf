@@ -80,7 +80,7 @@ static int kern_conf_b(SDFKernel *kernel, double cutoff,
 int main() {
     SDFKernel *kernel;
     SDFKernelConf *kernel_conf;
-    double a, b, A, B;
+    double a, b, A;
     double x0, y0, z0;
     double lo, hi, cutoff;
 
@@ -95,8 +95,10 @@ int main() {
 
     lo = 5; hi = 40.0;
     sdf_kernel_conf_cutoff(kernel_conf, lo, hi, /**/ &cutoff);
+    sdf_kernel_conf_a(kernel_conf, /**/ &A);
+
     sdf_kernel_conf_fin(kernel_conf);
     sdf_kernel_fin(kernel);
-    
-    printf("%g\n", cutoff);
+
+    printf("%g %g\n", cutoff, A);
 }
