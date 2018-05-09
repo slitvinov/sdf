@@ -11,8 +11,8 @@
 #define PI (3.141592653589793)
 
 static double ex, ey, ez, cx, cy, cz;
-static double amp_l = 0.0;
-static double amp_w = 0.4;
+static double amp_l = 4.0;
+static double amp_w = 0.0;
 
 static double fx(double t) { return ex * t; }
 static double fy(double t) {
@@ -38,7 +38,7 @@ int main() {
 
     cx = ex/2; cy = ey/2; cz = ez/2;
     a = -1; b = 2;
-    x0 = cx;   y0 = cy; z0 = cz + 0.1*ez;
+    x0 = cx;   y0 = cy; z0 = cz + 0.2*ez;
 
     sdf_file_ini(nx, ny, nz, ex, ey, ez, &file);
     sdf_file_n(file, &n);
@@ -61,7 +61,6 @@ int main() {
         sdf_integration_apply(integration, sdf_kernel_w, kernel, a, b, &res);
         val = A*res  - C;
         sdf_file_set(file, i,  val);
-//        printf("%g %g %g %g %g\n", x, y, z, val, res);
     }
     sdf_file_write(file, o);
 
