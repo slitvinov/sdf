@@ -32,4 +32,3 @@ draw2d(
   implicit(w0,       x, -4, 4, y, -4, 4),
   implicit(w0 - 1/2, x, -4, 4, y, -4, 4),
   implicit(w0 + 1/2, x, -4, 4, y, -4, 4));
-

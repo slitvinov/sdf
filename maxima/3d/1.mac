@@ -1,0 +1,36 @@
+load("pdiff") $
+load("scifac") $
+
+tellsimp(pderivop(u,1,0,0)('x,'y,'z), 'ux);
+tellsimp(pderivop(u,0,1,0)('x,'y,'z), 'uy);
+tellsimp(pderivop(u,0,0,1)('x,'y,'z), 'uz);
+
+tellsimp(pderivop(u,2,0,0)('x,'y,'z), 'uxx);
+tellsimp(pderivop(u,0,2,0)('x,'y,'z), 'uyy);
+tellsimp(pderivop(u,0,0,2)('x,'y,'z), 'uzz);
+
+tellsimp(pderivop(u,1,1,0)('x,'y,'z), 'uxy);
+tellsimp(pderivop(u,1,0,1)('x,'y,'z), 'uxz);
+tellsimp(pderivop(u,0,1,1)('x,'y,'z), 'uyz);
+
+w(x, y, z):= 'A*u(x, y, z) - 'C;
+
+tay0(e, i):=taylor(e, 'ds, 0, i);
+tay1(e, i):=expand(taytorat(tay0(e, i)), 0, 0);
+tay(e, i):=ratcoef(tay1(e, i), 'ds^i);
+
+nx: diff(w('x, 'y, 'z), 'x);
+ny: diff(w('x, 'y, 'z), 'y);
+nz: diff(w('x, 'y, 'z), 'z);
+
+dx: nx/'nn * 'ds;
+dy: ny/'nn * 'ds;
+dz: nz/'nn * 'ds;
+
+M: tay(w('x + 'dx, 'y + 'dy, 'z + 'dz) - w('x, 'y, 'z), 1), nn = sqrt(nx^2 + ny^2 + nz^2);
+L: tay(w('x + 'dx, 'y + 'dy, 'z + 'dz) - w('x, 'y, 'z), 2), nn = sqrt(nx^2 + uy^2 + nz^2);
+
+s: solve(M = 1, 'A)[2];
+L: factor(L);
+
+factor(subst(s, L));
