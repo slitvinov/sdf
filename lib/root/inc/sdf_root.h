@@ -1,6 +1,6 @@
 typedef struct SDFRoot SDFRoot;
 
-typedef double (*SDFRootF) (double X, void *PARAMS);
+typedef double (*SDFRootF) (double X, void *par);
 enum {ROOT_OK, ROOT_FAIL};
 
 int sdf_root_ini(SDFRoot**);
