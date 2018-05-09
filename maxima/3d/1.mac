@@ -33,4 +33,7 @@ L: tay(w('x + 'dx, 'y + 'dy, 'z + 'dz) - w('x, 'y, 'z), 2), nn = sqrt(nx^2 + uy^
 s: solve(M = 1, 'A)[2];
 L: factor(L);
 
-factor(subst(s, L));
+L: factor(subst(s, L));
+
+load("cgrind");
+cgrind(L);
