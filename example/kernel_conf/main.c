@@ -22,26 +22,6 @@ static double  I(double t) {
     return 1.0 + amp_w*sin(2*PI*t);
 };
 
-static double dbl(int *pc, const char **pv[]) {
-    double x;
-    int c;
-    const char **v;
-    v = *pv; c = *pc;
-    if (c < 2) {
-        fprintf(stderr, "needs an argument\n");
-        exit(2);
-    }
-
-    if (sscanf(v[1], "%lf", &x) != 1) {
-        fprintf(stderr, "fail to read dobule\n");
-        exit(2);
-    }
-    c--; v++;
-
-    *pc = c; *pv = v;
-    return x;
-}
-
 enum {KERN_CONF_OK, KERN_CONF_FAIL};
 static int kern_conf_a(SDFKernel *kernel, double cutoff,
                 double a, double b,
@@ -97,13 +77,11 @@ static int kern_conf_b(SDFKernel *kernel, double cutoff,
     return KERN_CONF_OK;
 }
 
-int main(int argc, const char *argv[]) {
+int main() {
     SDFKernel *kernel;
     SDFKernelConf *kernel_conf;
     double a, b, A, B;
     double x0, y0, z0, cutoff;
-
-    cutoff = dbl(&argc, &argv);
 
     ex = 32.0; ey = 32.0; ez = 32.0;
     cx = ex/2; cy = ey/2; cz = ez/2;
@@ -113,11 +91,10 @@ int main(int argc, const char *argv[]) {
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
     sdf_kernel_xyz(kernel, x0, y0, z0);
     sdf_kernel_conf_ini(kernel, a, b, /**/ &kernel_conf);
-
-    kern_conf_a(kernel, cutoff, a, b, x0, y0, z0, /**/ &A);
-    kern_conf_b(kernel, cutoff, a, b, x0, y0, z0, /**/ &B);
-
-    sdf_kernel_conf_fin(kernel_conf);
     
-    printf("%g %g\n", cutoff, B);
+    sdf_kernel_conf_cutoff(kernel_conf, /**/ &cutoff);
+    sdf_kernel_conf_fin(kernel_conf);
+    sdf_kernel_fin(kernel);
+    
+    printf("%g\n", cutoff);
 }
