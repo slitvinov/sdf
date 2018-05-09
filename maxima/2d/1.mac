@@ -1,19 +1,25 @@
 load("pdiff") $
 
-w(x, y):= A*u(x, y) - C;
+tellsimp(pderivop(u,1,0)('x,'y), 'ux);
+tellsimp(pderivop(u,0,1)('x,'y), 'uy);
+tellsimp(pderivop(u,1,1)('x,'y), 'uxy);
+tellsimp(pderivop(u,2,0)('x,'y), 'uxx);
+tellsimp(pderivop(u,0,2)('x,'y), 'uyy);
 
-nx: diff(w(x, y), x) / 'nn;
-ny: diff(w(x, y), y) / 'nn;
+w(x, y):= 'A*u(x, y) - 'C;
 
-dx: nx * ds;
-dy: ny * ds;
+tay0(e, i):=taylor(e, 'ds, 0, i);
+tay1(e, i):=expand(taytorat(tay0(e, i)), 0, 0);
+tay(e, i):=ratcoef(tay1(e, i), 'ds^i);
 
-tellsimpafter(pderivop(u,0,1)(x,y), ux);
-tellsimpafter(pderivop(u,1,0)(x,y), uy);
+nx: diff(w('x, 'y), 'x);
+ny: diff(w('x, 'y), 'y);
 
-tellsimpafter(pderivop(u,1,1)(x,y), uxy);
-tellsimpafter(pderivop(u,2,0)(x,y), uxx);
-tellsimpafter(pderivop(u,0,2)(x,y), uyy);
+dx: nx/'nn * 'ds;
+dy: ny/'nn * 'ds;
 
-taylor(w(x + dx, y + dy) - w(x, y) - ds, ds, 0, 1), nn = sqrt(ux^2 + uy^2);
-taylor(w(x + dx, y + dy) - w(x, y) - ds, ds, 0, 2), nn = sqrt(ux^2 + uy^2);
+M: tay(w('x + 'dx, 'y + 'dy) - w('x, 'y), 1), nn = sqrt(nx^2 + ny^2);
+L: tay(w('x + 'dx, 'y + 'dy) - w('x, 'y), 2), nn = sqrt(nx^2 + uy^2);
+
+L: factor(L);
+solve(M = 1, 'A)[2];
