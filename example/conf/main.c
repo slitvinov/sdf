@@ -26,8 +26,16 @@ static double dbl(int *pc, const char **pv[]) {
     int c;
     const char **v;
     v = *pv; c = *pc;
+    if (c < 2) {
+        fprintf(stderr, "needs an argument\n");
+        exit(2);
+    }
 
-    sscanf(v[1], "%lf", &x); c--; v++;
+    if (sscanf(v[1], "%lf", &x) != 1) {
+        fprintf(stderr, "fail to read dobule\n");
+        exit(2);
+    }
+    c--; v++;
 
     *pc = c; *pv = v;
     return x;
