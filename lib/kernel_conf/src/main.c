@@ -51,7 +51,7 @@ static double fun(double cutoff, void *param) {
     kernel = q->kernel;
     integration = q->integration;
     sdf_kernel_cutoff(kernel, cutoff);
-    
+
     sdf_integration_apply(integration, sdf_kernel_dx, kernel, a, b, &ux);
     sdf_integration_apply(integration, sdf_kernel_dy, kernel, a, b, &uy);
     sdf_integration_apply(integration, sdf_kernel_dz, kernel, a, b, &uz);
@@ -77,12 +77,22 @@ int sdf_kernel_conf_cutoff(SDFKernelConf *q, double lo, double hi, /**/ double *
     SDFRoot *root;
     sdf_root_ini(&root);
     r = sdf_root_apply(root, fun, q, lo, hi, /**/ &cutoff);
-
     if (r != ROOT_OK) {
         fprintf(stderr, "fail to find root\n");
         exit(2);
     }
     sdf_root_fin(root);
     *pcutoff = cutoff;
+    return KERNEL_CONF_OK;
+}
+
+int sdf_kernel_conf_a(SDFKernelConf *q, /**/ double *px) {
+    double x;
+
+    sdf_integration_apply(integration, sdf_kernel_dx, kernel, a, b, &ux);
+    sdf_integration_apply(integration, sdf_kernel_dy, kernel, a, b, &uy);
+    sdf_integration_apply(integration, sdf_kernel_dz, kernel, a, b, &uz);
+
+    *px = x;
     return KERNEL_CONF_OK;
 }
