@@ -101,7 +101,7 @@ static double dw20(double x, double y, double z) {
 }
 static double dw2(SDFKernel *q, double t) {
     double x, y, z, x0, y0, z0, dx, dy, dz, cutoff, I, w;
-    double al, grad;
+    double al;
     cutoff = q->cutoff;
     I = q->I(t);
     x0 = q->fx(t);
@@ -154,4 +154,55 @@ double sdf_kernel_dw2(double t, void *vp) {
     q = (SDFKernel*)vp;
     assert_q(q);
     return dw2(q, t);
+}
+
+static double dwdr(SDFKernel *q, double t) {
+    double x, y, z, x0, y0, z0, dx, dy, dz, cutoff, I, w;
+    cutoff = q->cutoff;
+    I = q->I(t);
+    x0 = q->fx(t); y0 = q->fy(t); z0 = q->fz(t);
+    x = q->x; y = q->y; z = q->z;
+    dx = x - x0; dy = y - y0; dz = z - z0;
+    dx /= cutoff; dy /= cutoff; dz /= cutoff;
+    w = w0(dx, dy, dz);
+    return - 2*I*w/(cutoff*cutoff);
+}
+
+static double drdx(SDFKernel *q, double t) {
+    double r, r0;
+    r0 = q->fx(t); r = q->x;
+    return r - r0;
+}
+
+static double drdy(SDFKernel *q, double t) {
+    double r, r0;
+    r0 = q->fy(t); r = q->y;
+    return r - r0;
+}
+
+static double drdz(SDFKernel *q, double t) {
+    double r, r0;
+    r0 = q->fz(t); r = q->z;
+    return r - r0;
+}
+
+double sdf_kernel_dx(double t, void *vp) {
+    SDFKernel *q;
+    q = (SDFKernel*)vp;
+    assert_q(q);
+    return  dwdr(q, t) * drdx(q, t);
+}
+
+double sdf_kernel_dy(double t, void *vp) {
+    SDFKernel *q;
+    q = (SDFKernel*)vp;
+    assert_q(q);
+    return  dwdr(q, t) * drdy(q, t);
+}
+
+double sdf_kernel_dz(double t, void *vp) {
+    SDFKernel *q;
+    q = (SDFKernel*)vp;
+    assert_q(q);
+    return  dwdr(q, t) * drdz(q, t);
 }
