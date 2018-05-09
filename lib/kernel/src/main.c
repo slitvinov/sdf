@@ -41,6 +41,12 @@ int sdf_kernel_cutoff(SDFKernel *q, double cutoff) {
         fprintf(stderr, "cutoff=%g <= 0\n", cutoff);
         return KERNEL_FAIL;
     }
+
+    if (q->stamp != MAGIC) {
+        fprintf(stderr, "q->stamp != MAGIC\n");
+        return KERNEL_FAIL;
+    }
+
     q->cutoff = cutoff;
     q->cutoffFlag = 1;
     return KERNEL_OK;

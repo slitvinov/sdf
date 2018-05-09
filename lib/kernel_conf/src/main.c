@@ -20,7 +20,7 @@ int sdf_kernel_conf_ini(SDFKernel *kernel,
                         SDFKernelConf **pq) {
     SDFKernelConf *q;
     EMALLOC(1, &q);
-    q->a = a; q->b = b;
+    q->kernel = kernel; q->a = a; q->b = b;
 
     sdf_integration_ini(&q->integration);
 
@@ -79,7 +79,7 @@ int sdf_kernel_conf_cutoff(SDFKernelConf *q, /**/ double *pcutoff) {
     SDFRootF f;
     sdf_root_ini(&root);
 
-    f = fun; lo = 1; hi = 20;
+    f = fun; lo = 5; hi = 20;
     r = sdf_root_apply(root, f, q, lo, hi, /**/ &cutoff);
 
     if (r != ROOT_OK) {
