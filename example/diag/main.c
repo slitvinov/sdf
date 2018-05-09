@@ -16,15 +16,17 @@ static double fx0(double t) { return ex*t;}
 static double fy0(double t) { return cy;}
 static double fz0(double t) { return cz;};
 
-static double fx1(double t) { return cx;}
+static double fx1(double t) { return ex*t;}
 static double fy1(double t) { return ey*t;}
 static double fz1(double t) { return cz;};
+
+static double I0(double t) { return 1.0;};
+static double I1(double t) { return sqrt(2);};
 
 static double fx(double t) { return t < 2 ? fx0(t) : fx1(t - 3); }
 static double fy(double t) { return t < 2 ? fy0(t) : fy1(t - 3); }
 static double fz(double t) { return t < 2 ? fz0(t) : fz1(t - 3); }
-
-static double  I(double t) { return 1.0;};
+static double  I(double t) { return t < 2 ?  I0(t) :  I1(t - 3); }
 
 int main() {
     SDFIntegration *integration;
