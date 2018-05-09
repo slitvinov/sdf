@@ -5,6 +5,7 @@
 #include <sdf_integration.h>
 #include <sdf_kernel.h>
 #include <sdf_root.h>
+#include <sdf_kernel_conf.h>
 
 #define PI (3.141592653589793)
 
@@ -98,6 +99,7 @@ static int kern_conf_b(SDFKernel *kernel, double cutoff,
 
 int main(int argc, const char *argv[]) {
     SDFKernel *kernel;
+    SDFKernelConf *kernel_conf;
     double a, b, A, B;
     double x0, y0, z0, cutoff;
 
@@ -109,9 +111,13 @@ int main(int argc, const char *argv[]) {
     x0 = cx;   y0 = cy; z0 = cz + 0.2*ez;
 
     sdf_kernel_ini(fx, fy, fz, I, &kernel);
+    sdf_kernel_conf_ini(kernel, a, b, x0, y0, z0, /**/
+                        &kernel_conf);
 
     kern_conf_a(kernel, cutoff, a, b, x0, y0, z0, /**/ &A);
     kern_conf_b(kernel, cutoff, a, b, x0, y0, z0, /**/ &B);
+
+    sdf_kernel_conf_fin(kernel_conf);
     
     printf("%g %g\n", cutoff, B);
 }

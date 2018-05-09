@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "sdf_memory.h"
+
+#include <sdf_memory.h>
+
 #include "sdf_kernel.h"
 
 static const int MAGIC = 42;

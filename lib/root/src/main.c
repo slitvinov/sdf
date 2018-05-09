@@ -1,7 +1,8 @@
 #include <gsl/gsl_roots.h>
 #include <gsl/gsl_errno.h>
 
-#include "sdf_memory.h"
+#include <sdf_memory.h>
+
 #include "sdf_root.h"
 
 #define EPS (1e-5)
