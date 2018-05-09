@@ -8,6 +8,6 @@ t=/tmp/sdf.visit
 vi.ln $t "$1"
 
 #vi.visit -o "$t"
-vi.visit -s visit/main.session
+vi.visit -s `pwd`/visit/main.session
 
 # rm $t

@@ -79,7 +79,7 @@ static double dw(SDFKernel *q, double t) {
     dx /= cutoff; dy /= cutoff; dz /= cutoff;
 
     w = w0(dx, dy, dz);
-    al = 2*I/(cutoff * cutoff);
+    al = 2*I/cutoff;
     grad  = al*w*sqrt(dx*dx + dy*dy + dz*dz);
     return grad;
 }
