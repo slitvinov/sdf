@@ -11,3 +11,15 @@ int sdf_kernel_cutoff(SDFKernel*, double cutoff);
 double sdf_kernel_w (double t, void *kernel);
 double sdf_kernel_dw(double t, void *kernel);
 double sdf_kernel_dw2(double t, void *kernel);
+
+double sdf_kernel_dx(double t, void *kernel);
+double sdf_kernel_dy(double t, void *kernel);
+double sdf_kernel_dz(double t, void *kernel);
+
+double sdf_kernel_dxx(double t, void *kernel);
+double sdf_kernel_dyy(double t, void *kernel);
+double sdf_kernel_dzz(double t, void *kernel);
+
+double sdf_kernel_dxy(double t, void *kernel);
+double sdf_kernel_dxz(double t, void *kernel);
+double sdf_kernel_dyz(double t, void *kernel);
