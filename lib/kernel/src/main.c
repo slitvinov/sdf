@@ -57,13 +57,9 @@ static double w(SDFKernel *q, double t) {
     double x, y, z, x0, y0, z0, dx, dy, dz, cutoff, I;
     cutoff = q->cutoff;
     I = q->I(t);
-    x0 = q->fx(t);
-    y0 = q->fy(t);
-    z0 = q->fz(t);
+    x0 = q->fx(t); y0 = q->fy(t); z0 = q->fz(t);
 
-    x = q->x;
-    y = q->y;
-    z = q->z;
+    x = q->x; y = q->y; z = q->z;
 
     dx = x - x0; dy = y - y0; dz = z - z0;
     dx /= cutoff; dy /= cutoff; dz /= cutoff;
@@ -75,19 +71,15 @@ static double dw(SDFKernel *q, double t) {
     double al, grad;
     cutoff = q->cutoff;
     I = q->I(t);
-    x0 = q->fx(t);
-    y0 = q->fy(t);
-    z0 = q->fz(t);
+    x0 = q->fx(t); y0 = q->fy(t); z0 = q->fz(t);
 
-    x = q->x;
-    y = q->y;
-    z = q->z;
+    x = q->x; y = q->y; z = q->z;
 
     dx = x - x0; dy = y - y0; dz = z - z0;
     dx /= cutoff; dy /= cutoff; dz /= cutoff;
 
     w = w0(dx, dy, dz);
-    al = 2*I/cutoff;
+    al = 2*I/(cutoff * cutoff);
     grad  = al*w*sqrt(dx*dx + dy*dy + dz*dz);
     return grad;
 }
