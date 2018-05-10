@@ -23,18 +23,44 @@ static double  I(double t) {
     return 1.0 + amp_w*sin(2*PI*t);
 };
 
+enum {LINE_OK, LINE_IO};
+typedef double (*LineF) (double t);
+int line(LineF fx, LineF fy, LineF fz, double a, double b, long n, const char *path) {
+    long i;
+    double t, x, y, z;
+    FILE *f;
+    if ((f = fopen(path, "w")) == NULL) {
+        fprintf(stderr, "fail to open file '%s'", path);
+        return LINE_IO;
+    }
+
+    fprintf(f, "line\n");
+    for (i = 0; i < n; i++) {
+        t = a + (double)i/(n - 1) * (b - a);
+        x = fx(t); y = fy(t); z = fz(t);
+        fprintf(f, "%g,%g,%g\n", x, y, z);
+    }
+    if (fclose(f) != 0) {
+        fprintf(stderr, "fail to close file '%s'", path);
+        return LINE_IO;
+    }
+    return LINE_OK;
+}
+
 int main() {
     SDFIntegration *integration;
     SDFKernel *kernel;
     SDFKernelConf *kernel_conf;
     SDFFile *file;
     int nx, ny, nz, n, i, s;
+    int status;
     double val, lo, hi, x, y, z, x0, y0, z0, A, C, cutoff;
     double a, b, res;
-    const char *o = "sdf.dat";
+    const char *osdf  = "sdf.dat";
+    const char *oline = "sdf.lines";
 
     ex = 32.0; ey = 32.0; ez = 32.0;
-    nx = 64;   ny = 64;  nz = 64;
+    nx = ny = nz = 32;
 
     cx = ex/2; cy = ey/2; cz = ez/2;
     a = -1; b = 2;
@@ -62,10 +88,18 @@ int main() {
         val = A*res  - C;
         sdf_file_set(file, i,  val);
     }
-    sdf_file_write(file, o);
+    sdf_file_write(file, osdf);
 
     sdf_kernel_fin(kernel);
     sdf_integration_fin(integration);
     sdf_file_fin(file);
     sdf_kernel_conf_fin(kernel_conf);
+
+    n = 100;
+    status = line(fx, fy, fz, a, b, n, oline);
+    if (status != LINE_OK) {
+        fprintf(stderr, "fail to dump lines");
+        exit(2);
+    }
+    
 }
