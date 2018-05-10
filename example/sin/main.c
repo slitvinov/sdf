@@ -60,7 +60,7 @@ int main() {
     const char *oline = "sdf.lines";
 
     ex = 32.0; ey = 32.0; ez = 32.0;
-    nx = ny = nz = 32;
+    nx = ny = nz = 64;
 
     cx = ex/2; cy = ey/2; cz = ez/2;
     a = -1; b = 2;

@@ -1,3 +1,5 @@
+set -eu
+
 err () { echo >&2 "$@"; exit 2; }
 
 if test $# -le 0
@@ -5,9 +7,15 @@ then err 'missing file'
 fi
 
 t=/tmp/sdf.visit
-vi.ln $t "$1"
+vi.ln $t "$1"; shift
+
+if test $# -ne 0
+then
+   l=/tmp/sdf.lines
+   vi.ln $l "$1"; shift
+fi
 
 #vi.visit -o "$t"
 vi.visit -s `pwd`/visit/main.session
 
-# rm $t
+# rm $t $l
