@@ -2,20 +2,18 @@ set -eu
 
 err () { echo >&2 "$@"; exit 2; }
 
-if test $# -le 0
-then err 'missing file'
+if test $# -ne 3
+then err 'missing files'
 fi
 
 t=/tmp/sdf.visit
 vi.ln $t "$1"; shift
 
-if test $# -ne 0
-then
-   l=/tmp/sdf.lines
-   vi.ln $l "$1"; shift
-fi
+l=/tmp/sdf.lines
+vi.ln $l "$1"; shift
 
-#vi.visit -o "$t"
-vi.visit -s `pwd`/visit/main.session
+p="$1"; shift
+
+visit/save visit/main.session "$p"
 
 # rm $t $l

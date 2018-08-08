@@ -11,24 +11,22 @@
 #define PI (3.141592653589793)
 
 static double ex, ey, ez, cx, cy, cz;
-static double amp_l = 4.0;
-static double amp_w = 0.0;
+static double amp_l, amp_w;
 
 static double fx(double t) { return ex * t; }
-static double fy(double t) {
-    return cy + amp_l*sin(2*PI*t);
-};
+static double fy(double t) { return cy + amp_l*sin(2*PI*t); }
 static double fz(double t) { return cz;};
-static double  I(double t) {
-    return 1.0 + amp_w*sin(2*PI*t);
-};
+static double  I(double t) { return 1.0 + amp_w*sin(2*PI*t); }
+static void ini_length() { amp_l = 4.0; amp_w = 0.0; }
+static void ini_width()  { amp_l = 0.0; amp_w = 0.6; }
 
 enum {LINE_OK, LINE_IO};
 typedef double (*LineF) (double t);
-int line(LineF fx, LineF fy, LineF fz, double a, double b, long n, const char *path) {
+static int line(LineF fx, LineF fy, LineF fz, double a, double b, long n, const char *path) {
     long i;
     double t, x, y, z;
     FILE *f;
+
     if ((f = fopen(path, "w")) == NULL) {
         fprintf(stderr, "fail to open file '%s'", path);
         return LINE_IO;
@@ -58,6 +56,8 @@ int main() {
     double a, b, res;
     const char *osdf  = "sdf.dat";
     const char *oline = "sdf.lines";
+
+    ini_length();
 
     ex = 32.0; ey = 32.0; ez = 32.0;
     nx = ny = nz = 64;

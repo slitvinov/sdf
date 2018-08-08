@@ -1,3 +1,5 @@
+
+
 $L: $O; ar rv $@ $O; ranlib $@
 clean:; rm -f $O $L
 install: $L $H
