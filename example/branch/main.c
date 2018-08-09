@@ -6,15 +6,14 @@
 #include <sdf_kernel.h>
 #include <sdf_kernel_conf.h>
 #include <sdf_file.h>
-#include <sdf_root.h>
 
 #define PI (3.141592653589793)
 
 #define r_small (1.0)
 #define r_big   (r_small/9*12.5)
 
-static double r_hi = r_big;
-static double r_lo = r_small;
+static double r_hi = r_small;
+static double r_lo = r_big;
 
 static double ex, ey, ez, cx, cy, cz;
 
