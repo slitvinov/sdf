@@ -12,17 +12,21 @@
 
 static double ex, ey, ez, cx, cy, cz;
 
-static double fx0(double t) { return ex*t;}
+static double fx0(double t) { return cx*t;}
 static double fy0(double t) { return cy;}
 static double fz0(double t) { return cz;};
 
-static double fx1(double t) { return cx;}
-static double fy1(double t) { return ey*t;}
+static double fx1(double t) { return cx + cx*t;}
+static double fy1(double t) { return cy + cy*t;}
 static double fz1(double t) { return cz;};
 
-static double fx(double t) { return t < 2 ? fx0(t) : fx1(t - 3); }
-static double fy(double t) { return t < 2 ? fy0(t) : fy1(t - 3); }
-static double fz(double t) { return t < 2 ? fz0(t) : fz1(t - 3); }
+static double fx2(double t) { return cx + cx*t;}
+static double fy2(double t) { return cy - cy*t;}
+static double fz2(double t) { return cz;};
+
+static double fx(double t) { return t < 1 ? fx0(t) : t < 3 ? fx1(t - 1) : fx2(t - 3); }
+static double fy(double t) { return t < 1 ? fy0(t) : t < 3 ? fy1(t - 1) : fy2(t - 3); }
+static double fz(double t) { return t < 1 ? fz0(t) : t < 3 ? fz1(t - 1) : fz2(t - 3); }
 
 static double  I(double t) { return 1.0;};
 
