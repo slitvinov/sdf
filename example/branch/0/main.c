@@ -33,7 +33,7 @@ static double fx(double t) { return t < 1 ? fx0(t) : t < 3 ? fx1(t - 1) : fx2(t 
 static double fy(double t) { return t < 1 ? fy0(t) : t < 3 ? fy1(t - 1) : fy2(t - 3); }
 static double fz(double t) { return t < 1 ? fz0(t) : t < 3 ? fz1(t - 1) : fz2(t - 3); }
 
-static double I(double t) { return t < 1 ? 1.0*r_small : t < 3 ? sqrt(2)*r_hi : sqrt(2)*r_lo; }
+static double I(double t) { return t < 1 ? r_small : t < 3 ? sqrt(2)*r_hi : sqrt(2)*r_lo; }
 
 int main() {
     SDFIntegration *integration;
