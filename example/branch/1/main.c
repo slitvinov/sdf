@@ -14,6 +14,7 @@
 
 static double r_hi = r_small;
 static double r_lo = r_big;
+static double yfactor = 0.75;
 
 static double ex, ey, ez, cx, cy, cz;
 
@@ -22,18 +23,23 @@ static double fy0(double t) { return cy;}
 static double fz0(double t) { return cz;};
 
 static double fx1(double t) { return cx + cx*t;}
-static double fy1(double t) { return cy + cy*t;}
+static double fy1(double t) { return cy + cy*yfactor*t;}
 static double fz1(double t) { return cz;};
 
 static double fx2(double t) { return cx + cx*t;}
-static double fy2(double t) { return cy - cy*t;}
+static double fy2(double t) { return cy - cy*yfactor*t;}
 static double fz2(double t) { return cz;};
 
-static double fx(double t) { return t < 1 ? fx0(t) : t < 3 ? fx1(t - 1) : fx2(t - 3); }
-static double fy(double t) { return t < 1 ? fy0(t) : t < 3 ? fy1(t - 1) : fy2(t - 3); }
-static double fz(double t) { return t < 1 ? fz0(t) : t < 3 ? fz1(t - 1) : fz2(t - 3); }
+static double fx(double t) { return t < 1 ? fx0(t) : t < 2 ? fx1(t - 1) : fx2(t - 2); }
+static double fy(double t) { return t < 1 ? fy0(t) : t < 2 ? fy1(t - 1) : fy2(t - 2); }
+static double fz(double t) { return t < 1 ? fz0(t) : t < 2 ? fz1(t - 1) : fz2(t - 2); }
 
-static double I(double t) { return t < 1 ? r_small : t < 3 ? sqrt(2)*r_hi : sqrt(2)*r_lo; }
+static double Fx(double t) { return t < 3 ? fx(t) : ex - fx(t - 4); }
+static double Fy(double t) { return t < 3 ? fy(t) : fy(t - 4);      }
+static double Fz(double t) { return t < 3 ? fz(t) : fz(t - 4);      }
+
+static double I0(double t) { return t < 1 ? r_small : t < 2 ? sqrt(1 + yfactor)*r_hi : sqrt(1 + yfactor)*r_lo; }
+static double  I(double t) { return t < 3 ? I0(t) : I0(t - 4); }
 
 int main() {
     SDFIntegration *integration;
@@ -45,21 +51,21 @@ int main() {
     double a, b, res;
     const char *o = "sdf.dat";
 
-    ex = ey = ez = 32;
-    nx = ny = nz = 64;
+    ex = 64;  ey = ez = 32;
+    nx = 128; ny = nz = 64;
 
-    cx = ex/2; cy = ey/2; cz = ez/2;
-    a = -1; b = 2 + 3;
+    cx = ex/4; cy = ey/2; cz = ez/2;
+    a = -1; b = 7;
     x0 = 0;   y0 = cy; z0 = cz + 0.1*ez;
 
     sdf_file_ini(nx, ny, nz, ex, ey, ez, &file);
     sdf_file_n(file, &n);
     sdf_integration_ini(&integration);
-    sdf_kernel_ini(fx, fy, fz, I, &kernel);
+    sdf_kernel_ini(Fx, Fy, Fz, I, &kernel);
     sdf_kernel_xyz(kernel, x0, y0, z0);
 
     sdf_kernel_conf_ini(kernel, a, b, /**/ &kernel_conf);
-    lo = 4; hi = 20;
+    lo = 2.0; hi = 10.0;
     sdf_kernel_conf_apply(kernel_conf, lo, hi, /**/ &cutoff, &A, &C);
     sdf_kernel_cutoff(kernel, cutoff);
 
