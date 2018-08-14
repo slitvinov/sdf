@@ -77,7 +77,7 @@ int main() {
         }
         sdf_kernel_xyz(kernel, x, y, z);
         sdf_integration_apply(integration, sdf_kernel_w, kernel, a, b, &res);
-        val = A*res  - C;
+        val = C - A*res;
         sdf_file_set(file, i,  val);
     }
     sdf_file_write(file, o);
