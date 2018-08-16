@@ -14,7 +14,7 @@
 
 static double r_hi = r_small;
 static double r_lo = r_big;
-static double yfactor = 0.75;
+static double yfactor = 0.85;
 
 static double ex, ey, ez, cx, cy, cz;
 
@@ -54,7 +54,7 @@ int main() {
     const char *o = "sdf.dat";
     const int sc = 4;
 
-    ex = 64;  ey = 64; ez = 16;
+    ex = 96;  ey = 64; ez = 16;
     nx = (int)ex*sc; ny = (int)ey*sc; nz = (int)ez*sc;
 
     cx = ex/4; cy = ey/2; cz = ez/2;
@@ -66,9 +66,9 @@ int main() {
     sdf_kernel_ini(Fx, Fy, Fz, I, &kernel);
     sdf_kernel_xyz(kernel, x0, y0, z0);
 
-    a = -1; b = 7;    
+    a = -1; b = 7;
     sdf_kernel_conf_ini(kernel, a, b, /**/ &kernel_conf);
-    lo = 2.0; hi = 10.0;
+    lo = 2.5; hi = 10.0;
     sdf_kernel_conf_apply(kernel_conf, lo, hi, /**/ &cutoff, &A, &C);
     sdf_kernel_cutoff(kernel, cutoff);
 
